@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// Schéma pour une Réponse (sous-document embarqué)
+// Schéma pour une Réponse
 const answerSchema = new mongoose.Schema({
 body: { type: String, required: true },
 author: { type: String, required: true },
