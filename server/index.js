@@ -5,6 +5,8 @@ const connectDB = require('./config/db');
 const questionRoutes = require('./routes/questionRoutes');  // ← ajouter
 
 const app = express();
+const connectDB = require("./config/db");
+connectDB();
 app.use(cors());
 app.use(express.json());
 
