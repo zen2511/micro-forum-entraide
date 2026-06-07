@@ -26,28 +26,28 @@ const logoAccentStyle = {
   color: '#4A90D9',
 }
 
-const navLinkStyle = {
-  color: '#BDC3C7',
-  fontSize: '14px',
-  padding: '6px 14px',
-  borderRadius: '6px',
-  border: '1px solid #4A90D9',
-  color: '#4A90D9',
-  transition: 'all 0.2s',
-}
+// const navLinkStyle = {
+//   color: '#BDC3C7',
+//   fontSize: '14px',
+//   padding: '6px 14px',
+//   borderRadius: '6px',
+//   border: '1px solid #4A90D9',
+//   color: '#4A90D9',
+//   transition: 'all 0.2s',
+// }
 
 function App() {
   return (
     <>
       <header style={headerStyle}>
         <Link to='/' style={logoStyle}>
-          Micro<span style={logoAccentStyle}>Forum</span>
-          <span style={{ color: '#BDC3C7', fontSize: '13px', fontWeight: '400', marginLeft: '10px' }}>
+          Micro <span style={logoAccentStyle}>Forum</span>
+          {/* <span style={{ color: '#BDC3C7', fontSize: '13px', fontWeight: '400', marginLeft: '10px' }}>
             ENSPM
-          </span>
+          </span> */}
         </Link>
         <span style={{ color: '#BDC3C7', fontSize: '13px' }}>
-          Mini StackOverflow — Génie Informatique
+          Mini StackOverflow
         </span>
       </header>
 
