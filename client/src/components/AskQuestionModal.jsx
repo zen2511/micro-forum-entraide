@@ -2,18 +2,21 @@ import { useState } from 'react'
 
 function AskQuestionModal({ onClose, onQuestionAdded }) {
   const [form, setForm] = useState({ title: '', body: '', author: '', tag: '' })
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
+    setError('')
   }
 
   const handleSubmit = async () => {
     if (form.title.length < 10) {
-      alert('Le titre doit faire au moins 10 caractères')
+      setError('Le titre doit faire au moins 10 caractères')
       return
     }
     if (!form.body || !form.author || !form.tag) {
-      alert('Tous les champs sont obligatoires')
+      setError('Tous les champs sont obligatoires')
       return
     }
     const res = await fetch('http://localhost:5000/api/questions', {
@@ -22,8 +25,11 @@ function AskQuestionModal({ onClose, onQuestionAdded }) {
       body: JSON.stringify(form)
     })
     if (res.ok) {
-      onQuestionAdded()
-      onClose()
+      setSuccess(true)
+      setTimeout(() => {
+        onQuestionAdded()
+        onClose()
+      }, 1500)
     }
   }
 
@@ -68,101 +74,107 @@ function AskQuestionModal({ onClose, onQuestionAdded }) {
           <h2 style={{ color: '#FFFFFF', fontSize: '17px', fontWeight: '600' }}>
             Poser une question
           </h2>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#BDC3C7',
-              fontSize: '22px',
-              cursor: 'pointer',
-              lineHeight: 1,
-            }}
-          >
-            ×
-          </button>
+          <button onClick={onClose} style={{
+            background: 'none', border: 'none',
+            color: '#BDC3C7', fontSize: '22px', cursor: 'pointer',
+          }}>×</button>
         </div>
 
         {/* Corps modal */}
         <div style={{ padding: '24px 28px' }}>
-          <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
-            Titre <span style={{ color: '#E74C3C' }}>*</span>
-          </label>
-          <input
-            name='title'
-            placeholder='Minimum 10 caractères...'
-            onChange={handleChange}
-            style={inputStyle}
-          />
 
-          <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
-            Détail du problème <span style={{ color: '#E74C3C' }}>*</span>
-          </label>
-          <textarea
-            name='body'
-            placeholder='Explique ton problème en détail...'
-            onChange={handleChange}
-            rows='4'
-            style={{ ...inputStyle, resize: 'vertical' }}
-          />
-
-          <div style={{ display: 'flex', gap: '14px' }}>
-            <div style={{ flex: 1 }}>
-              <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
-                Pseudonyme <span style={{ color: '#E74C3C' }}>*</span>
-              </label>
-              <input
-                name='author'
-                placeholder='Ton nom...'
-                onChange={handleChange}
-                style={inputStyle}
-              />
+          {/* Message succès */}
+          {success && (
+            <div style={{
+              backgroundColor: '#EAFAF1',
+              border: '1px solid #27AE60',
+              borderRadius: '8px',
+              padding: '14px 18px',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <span style={{ fontSize: '20px' }}>✅</span>
+              <div>
+                <p style={{ color: '#1E8449', fontWeight: '700', fontSize: '14px' }}>
+                  Question publiée avec succès !
+                </p>
+                <p style={{ color: '#27AE60', fontSize: '12px', marginTop: '2px' }}>
+                  Redirection en cours...
+                </p>
+              </div>
             </div>
-            <div style={{ flex: 1 }}>
-              <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
-                Tag <span style={{ color: '#E74C3C' }}>*</span>
-              </label>
-              <input
-                name='tag'
-                placeholder='React, Node.js...'
-                onChange={handleChange}
-                style={inputStyle}
-              />
-            </div>
-          </div>
+          )}
 
-          {/* Boutons */}
-          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '8px' }}>
-            <button
-              onClick={onClose}
-              style={{
-                padding: '10px 20px',
-                borderRadius: '8px',
-                border: '1px solid #D5D8DC',
-                backgroundColor: '#F8F9FA',
-                color: '#5D6D7E',
-                fontSize: '14px',
-                fontWeight: '500',
-              }}
-            >
-              Annuler
-            </button>
-            <button
-              onClick={handleSubmit}
-              style={{
-                padding: '10px 24px',
-                borderRadius: '8px',
-                border: 'none',
-                backgroundColor: '#4A90D9',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: '600',
-                boxShadow: '0 2px 8px rgba(74,144,217,0.4)',
-              }}
-            >
-              Publier
-            </button>
-          </div>
+          {/* Message erreur */}
+          {error && (
+            <div style={{
+              backgroundColor: '#FDEDEC',
+              border: '1px solid #E74C3C',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              marginBottom: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}>
+              <span>⚠️</span>
+              <p style={{ color: '#C0392B', fontSize: '13px', fontWeight: '500' }}>{error}</p>
+            </div>
+          )}
+
+          {!success && (
+            <>
+              <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
+                Titre <span style={{ color: '#E74C3C' }}>*</span>
+              </label>
+              <input name='title' placeholder='Minimum 10 caractères...'
+                onChange={handleChange} style={inputStyle} />
+
+              <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
+                Détail du problème <span style={{ color: '#E74C3C' }}>*</span>
+              </label>
+              <textarea name='body' placeholder='Explique ton problème en détail...'
+                onChange={handleChange} rows='4'
+                style={{ ...inputStyle, resize: 'vertical' }} />
+
+              <div style={{ display: 'flex', gap: '14px' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
+                    Pseudonyme <span style={{ color: '#E74C3C' }}>*</span>
+                  </label>
+                  <input name='author' placeholder='Ton nom...'
+                    onChange={handleChange} style={inputStyle} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
+                    Tag <span style={{ color: '#E74C3C' }}>*</span>
+                  </label>
+                  <input name='tag' placeholder='React, Node.js...'
+                    onChange={handleChange} style={inputStyle} />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '8px' }}>
+                <button onClick={onClose} style={{
+                  padding: '10px 20px', borderRadius: '8px',
+                  border: '1px solid #D5D8DC', backgroundColor: '#F8F9FA',
+                  color: '#5D6D7E', fontSize: '14px', fontWeight: '500',
+                }}>
+                  Annuler
+                </button>
+                <button onClick={handleSubmit} style={{
+                  padding: '10px 24px', borderRadius: '8px', border: 'none',
+                  backgroundColor: '#4A90D9', color: 'white',
+                  fontSize: '14px', fontWeight: '600',
+                  boxShadow: '0 2px 8px rgba(74,144,217,0.4)',
+                }}>
+                  Publier
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

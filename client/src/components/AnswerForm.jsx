@@ -3,10 +3,12 @@ import { useState } from 'react'
 function AnswerForm({ questionId, onAnswerAdded }) {
   const [body, setBody]     = useState('')
   const [author, setAuthor] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [error, setError]   = useState('')
 
   const handleSubmit = async () => {
     if (!body.trim() || !author.trim()) {
-      alert('Remplis tous les champs')
+      setError('Remplis tous les champs')
       return
     }
     const res = await fetch(
@@ -20,6 +22,9 @@ function AnswerForm({ questionId, onAnswerAdded }) {
     if (res.ok) {
       setBody('')
       setAuthor('')
+      setError('')
+      setSuccess(true)
+      setTimeout(() => setSuccess(false), 3000)
       onAnswerAdded()
     }
   }
@@ -49,12 +54,53 @@ function AnswerForm({ questionId, onAnswerAdded }) {
         Ajouter une réponse
       </h3>
 
+      {/* Message succès */}
+      {success && (
+        <div style={{
+          backgroundColor: '#EAFAF1',
+          border: '1px solid #27AE60',
+          borderRadius: '8px',
+          padding: '14px 18px',
+          marginBottom: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+        }}>
+          <span style={{ fontSize: '20px' }}>✅</span>
+          <div>
+            <p style={{ color: '#1E8449', fontWeight: '700', fontSize: '14px' }}>
+              Réponse publiée avec succès !
+            </p>
+            <p style={{ color: '#27AE60', fontSize: '12px', marginTop: '2px' }}>
+              Ta réponse apparaît maintenant dans la liste.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Message erreur */}
+      {error && (
+        <div style={{
+          backgroundColor: '#FDEDEC',
+          border: '1px solid #E74C3C',
+          borderRadius: '8px',
+          padding: '12px 16px',
+          marginBottom: '14px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+        }}>
+          <span>⚠️</span>
+          <p style={{ color: '#C0392B', fontSize: '13px', fontWeight: '500' }}>{error}</p>
+        </div>
+      )}
+
       <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
         Ta réponse <span style={{ color: '#E74C3C' }}>*</span>
       </label>
       <textarea
         value={body}
-        onChange={e => setBody(e.target.value)}
+        onChange={e => { setBody(e.target.value); setError('') }}
         placeholder='Écris ta réponse ici...'
         rows='4'
         style={{ ...inputStyle, resize: 'vertical' }}
@@ -65,7 +111,7 @@ function AnswerForm({ questionId, onAnswerAdded }) {
       </label>
       <input
         value={author}
-        onChange={e => setAuthor(e.target.value)}
+        onChange={e => { setAuthor(e.target.value); setError('') }}
         placeholder='Ton nom...'
         style={inputStyle}
       />
