@@ -4,15 +4,17 @@ import QuestionDetail from './pages/QuestionDetail'
 
 const headerStyle = {
   backgroundColor: '#1C2833',
-  padding: '0 40px',
-  height: '64px',
+  padding: '',
+  height: '80px',
+  borderRadius: '5px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
   position: 'sticky',
   top: 0,
-  zIndex: 100,
+  zIndex: '100',
+  width: '100%'
 }
 
 const logoStyle = {
@@ -20,6 +22,9 @@ const logoStyle = {
   fontSize: '20px',
   fontWeight: '700',
   letterSpacing: '0.5px',
+  textDecorationLine: 'none', 
+  //fontSize:'28px', 
+   padding: '2%'
 }
 
 const logoAccentStyle = {
@@ -46,8 +51,8 @@ function App() {
             ENSPM
           </span> */}
         </Link>
-        <span style={{ color: '#BDC3C7', fontSize: '13px' }}>
-          Mini StackOverflow
+        <span style={{ color: '#BDC3C7', fontSize: '13px', padding:'2%' }}>
+          Votre Mini StackOverflow
         </span>
       </header>
 

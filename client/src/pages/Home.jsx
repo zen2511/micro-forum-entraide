@@ -101,7 +101,8 @@ function Home() {
                   fontSize: '16px',
                   fontWeight: '600',
                   marginBottom: '10px',
-                  lineHeight: '1.4',
+                  //lineHeight: '1.4',
+                  textDecorationLine:'none'
                 }}>
                   {q.title}
                 </h3>

@@ -35,8 +35,9 @@ function QuestionDetail() {
         fontSize: '14px',
         marginBottom: '20px',
         fontWeight: '500',
+        textDecorationLine:'none'
       }}>
-        ← Retour à l'accueil
+        Retour à l'accueil
       </Link>
 
       {/* Carte question */}
@@ -108,7 +109,7 @@ function QuestionDetail() {
 
         {question.answers.length === 0 ? (
           <p style={{ color: '#95A5A6', fontSize: '14px', textAlign: 'center', padding: '20px 0' }}>
-            Aucune réponse pour l'instant. Sois le premier !
+            Aucune réponse pour l'instant. Sois le premier a répondre !
           </p>
         ) : (
           question.answers.map((ans, i) => (
