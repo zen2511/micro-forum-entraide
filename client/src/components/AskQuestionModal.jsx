@@ -57,7 +57,7 @@ function AskQuestionModal({ onClose, onQuestionAdded }) {
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
-        width: '520px',
+        width: '60%',
         maxWidth: '95%',
         boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
         overflow: 'hidden',
@@ -81,7 +81,7 @@ function AskQuestionModal({ onClose, onQuestionAdded }) {
         </div>
 
         {/* Corps modal */}
-        <div style={{ padding: '24px 28px' }}>
+        <div style={{ padding: '10%'  }}>
 
           {/* Message succès */}
           {success && (
@@ -117,6 +117,7 @@ function AskQuestionModal({ onClose, onQuestionAdded }) {
               marginBottom: '14px',
               display: 'flex',
               alignItems: 'center',
+              width: '100%',
               gap: '8px',
             }}>
               <span>⚠️</span>
@@ -139,15 +140,15 @@ function AskQuestionModal({ onClose, onQuestionAdded }) {
                 onChange={handleChange} rows='4'
                 style={{ ...inputStyle, resize: 'vertical' }} />
 
-              <div style={{ display: 'flex', gap: '14px' }}>
-                <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', gap: '40px' }}>
+                <div style={{ display:"inline-flex", }}>
                   <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
                     Pseudonyme <span style={{ color: '#E74C3C' }}>*</span>
                   </label>
                   <input name='author' placeholder='Ton nom...'
                     onChange={handleChange} style={inputStyle} />
                 </div>
-                <div style={{ flex: 1 }}>
+                <div style={{ display:"inline-flex" }}>
                   <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
                     Tag <span style={{ color: '#E74C3C' }}>*</span>
                   </label>
