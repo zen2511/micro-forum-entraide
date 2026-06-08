@@ -1,16 +1,18 @@
 import { useState } from 'react'
 
 function AnswerForm({ questionId, onAnswerAdded }) {
-  const [body, setBody]     = useState('')
-  const [author, setAuthor] = useState('')
+  const [body, setBody]       = useState('')
+  const [author, setAuthor]   = useState('')
   const [success, setSuccess] = useState(false)
-  const [error, setError]   = useState('')
+  const [error, setError]     = useState('')
+  const [loading, setLoading] = useState(false) // ✅ Spinner
+
+  // ✅ Bouton désactivé si champs vides
+  const isFormValid = body.trim().length > 0 && author.trim().length > 0
 
   const handleSubmit = async () => {
-    if (!body.trim() || !author.trim()) {
-      setError('Remplis tous les champs')
-      return
-    }
+    if (!isFormValid) return
+    setLoading(true) // ✅ Spinner ON
     const res = await fetch(
       `http://localhost:5000/api/questions/${questionId}/answers`,
       {
@@ -19,6 +21,7 @@ function AnswerForm({ questionId, onAnswerAdded }) {
         body: JSON.stringify({ body, author })
       }
     )
+    setLoading(false) // ✅ Spinner OFF
     if (res.ok) {
       setBody('')
       setAuthor('')
@@ -26,6 +29,8 @@ function AnswerForm({ questionId, onAnswerAdded }) {
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
       onAnswerAdded()
+    } else {
+      setError('Erreur lors de la publication. Réessaie.')
     }
   }
 
@@ -39,6 +44,7 @@ function AnswerForm({ questionId, onAnswerAdded }) {
     backgroundColor: '#F8F9FA',
     outline: 'none',
     marginBottom: '12px',
+    boxSizing: 'border-box',
   }
 
   return (
@@ -95,9 +101,19 @@ function AnswerForm({ questionId, onAnswerAdded }) {
         </div>
       )}
 
-      <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E', display: 'block', marginBottom: '6px' }}>
-        Ta réponse <span style={{ color: '#E74C3C' }}>*</span>
-      </label>
+      {/* ✅ Label + compteur de caractères pour la réponse */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+        <label style={{ fontSize: '13px', fontWeight: '600', color: '#5D6D7E' }}>
+          Ta réponse <span style={{ color: '#E74C3C' }}>*</span>
+        </label>
+        <span style={{
+          fontSize: '12px',
+          fontWeight: '600',
+          color: body.trim().length > 0 ? '#27AE60' : '#AEB6BF',
+        }}>
+          {body.length} car.
+        </span>
+      </div>
       <textarea
         value={body}
         onChange={e => { setBody(e.target.value); setError('') }}
@@ -116,22 +132,46 @@ function AnswerForm({ questionId, onAnswerAdded }) {
         style={inputStyle}
       />
 
+      {/* ✅ Bouton désactivé + Spinner */}
       <button
         onClick={handleSubmit}
+        disabled={!isFormValid || loading}
         style={{
           padding: '10px 24px',
-          backgroundColor: '#27AE60',
+          backgroundColor: isFormValid && !loading ? '#27AE60' : '#AEB6BF',
           color: 'white',
           border: 'none',
           borderRadius: '8px',
           fontSize: '14px',
           fontWeight: '600',
-          boxShadow: '0 2px 8px rgba(39,174,96,0.3)',
+          boxShadow: isFormValid && !loading ? '0 2px 8px rgba(39,174,96,0.3)' : 'none',
           marginTop: '4px',
+          cursor: isFormValid && !loading ? 'pointer' : 'not-allowed',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          transition: 'background-color 0.2s',
         }}
       >
-        Répondre
+        {loading && (
+          <span style={{
+            width: '14px', height: '14px',
+            border: '2px solid #ffffff55',
+            borderTop: '2px solid #fff',
+            borderRadius: '50%',
+            display: 'inline-block',
+            animation: 'spin 0.7s linear infinite',
+          }} />
+        )}
+        {loading ? 'Publication...' : 'Répondre'}
       </button>
+
+      {/* ✅ Animation spinner CSS */}
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   )
 }
